@@ -1,7 +1,7 @@
 name: ci
 on:
   push:
-    branches: [ feature/base-secure ]
+    branches: [ feature/redis-alembic ]
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -17,4 +17,4 @@ jobs:
           pip install -r requirements.txt
       - name: quick import check
         run: |
-          python -c "import fastapi; import sqlalchemy; import jwt; print('imports ok')"
+          python -c "import fastapi; import sqlalchemy; import redis; import alembic; print('imports ok')"
