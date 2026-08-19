@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Sessions - Admin</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:20px}
+    table{border-collapse:collapse;width:100%}
+    th,td{border:1px solid #ddd;padding:8px}
+    th{background:#f4f4f4}
+    button{padding:6px 10px}
+  </style>
+</head>
+<body>
+  <h1>Active Sessions</h1>
+  <div id="user">Checking user...</div>
+  <table id="sessions">
+    <thead><tr><th>ID</th><th>Created</th><th>Expires</th><th>Revoked</th><th>IP</th><th>User Agent</th><th>Action</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function fetchMe(){
+      const r = await fetch('/api/me');
+      if(!r.ok){document.getElementById('user').innerText='Not authenticated';return false}
+      const j = await r.json();
+      document.getElementById('user').innerText = 'Logged in as: ' + j.username;
+      return true
+    }
+
+    async function loadSessions(){
+      const r = await fetch('/api/sessions');
+      if(!r.ok){document.querySelector('#sessions tbody').innerHTML='<tr><td colspan="7">Failed to load sessions (login first)</td></tr>';return}
+      const list = await r.json();
+      const tbody = document.querySelector('#sessions tbody');
+      tbody.innerHTML='';
+      for(const s of list){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${s.id}</td><td>${s.created_at}</td><td>${s.expires_at}</td><td>${s.revoked}</td><td>${s.ip_address||''}</td><td>${s.user_agent||''}</td><td><button data-id="${s.id}">Revoke</button></td>`
+        tbody.appendChild(tr);
+      }
+      document.querySelectorAll('button[data-id]').forEach(b=>b.addEventListener('click',async e=>{
+        const id = e.currentTarget.dataset.id;
+        const resp = await fetch('/api/sessions/'+id,{method:'DELETE'});
+        if(resp.ok) loadSessions(); else alert('Failed');
+      }))
+    }
+
+    (async ()=>{
+      const ok = await fetchMe();
+      if(ok) await loadSessions();
+    })();
+  </script>
+</body>
+</html>
