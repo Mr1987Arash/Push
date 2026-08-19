@@ -1,8 +1,8 @@
 fastapi
 uvicorn[standard]
-numpy
-scipy
-matplotlib
+sqlalchemy
+psycopg2-binary
+passlib[bcrypt]
+PyJWT
 python-dotenv
-pyrtlsdr
-websockets
+jinja2

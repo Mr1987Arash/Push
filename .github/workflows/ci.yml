@@ -1,27 +1,20 @@
-name: CI
-
+name: ci
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+    branches: [ feature/base-secure ]
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - name: Install deps
         run: |
           cd backend
-          python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Lint
+      - name: quick import check
         run: |
-          cd backend
-          python -m pip install flake8
-          flake8 || true
+          python -c "import fastapi; import sqlalchemy; import jwt; print('imports ok')"

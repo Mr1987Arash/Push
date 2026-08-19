@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Push - Room</title>
+  <style>
+    body{font-family:Arial}
+    #messages{height:300px; overflow:auto; border:1px solid #ccc;padding:8px}
+  </style>
+</head>
+<body>
+  <h3>Room</h3>
+  <div id="messages"></div>
+  <input id="msg" placeholder="message"><button id="send">Send</button>
+  <script>
+    const token = localStorage.getItem('token');
+    if(!token) location.href = '/login.html';
+    const room = 'main';
+    const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+    const ws = new WebSocket(`${protocol}://${location.host}/ws/room/${room}?token=${token}`);
+    const msgs = document.getElementById('messages');
+    ws.onmessage = (evt)=>{ const d = document.createElement('div'); d.textContent = evt.data; msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight; };
+    ws.onopen = ()=>console.log('ws open');
+    ws.onclose = ()=>console.log('ws closed');
+    document.getElementById('send').onclick = ()=>{ const v = document.getElementById('msg').value; ws.send(v); document.getElementById('msg').value=''; }
+  </script>
+</body>
+</html>
