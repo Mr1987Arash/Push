@@ -1,0 +1,28 @@
+.DS_Store
+__pycache__/
+.venv/
+env/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+/local_settings.py
+/*.sqlite3
+/.idea/
+.vscode/
+*.iml
+/build/
+/dist/
+node_modules/
+*.keystore
+*.apk
+.gradle/
+
+# Android Studio
+/.cxx/
+/.externalNativeBuild/
+
+# logs
+logs
+*.log
