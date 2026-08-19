@@ -1,35 +1,16 @@
-# live-stream-wave-control (Push)
+# README.md
+# Push - MVP
 
-این مخزن یک scaffold اولیه برای پروژهٔ "Live Stream + Wave Control" است. هدف: یک سرویس پایتون برای دریافت نمونه‌های SDR (یا شبیه‌سازی)، تولید اسپکتروگرام/واترفال لحظه‌ای و ارسال آن به یک وب‑UI. همچنین شامل نکات مربوط به استریم و RTMP و یک اسکلت اندروید برای استریم و overlay است.
+This repository contains a small FastAPI backend with WebSocket chat rooms, Redis pub/sub for scaling across instances, JWT auth with HttpOnly cookies, and docker-compose for local dev.
 
-نکات مهم و هشدارها
-- این پروژه برای "مشاهده و تحلیل" سیگنال‌ها (passive reception) طراحی شده است. هرگونه ارسال/جهت‌دهی رادیویی یا استفاده از فرستنده‌ها باید مطابق قوانین محل شما و با مجوز انجام شود.
-- برای کار با SDR واقعی به سخت‌افزار (مثل RTL‑SDR) و درایورهای مناسب نیاز دارید.
+Branches:
+- feature/base-secure: initial MVP
+- feature/redis-alembic: added Redis pubsub and Alembic migrations
+- feature/secure-ws: TLS-ready nginx config and secure cookie flow
 
-Quick start (local, Linux / Raspberry Pi)
-1. نصب پیش‌نیازها (سیستم):
-   - نصب Python 3.10+
-   - نصب ffmpeg (برای relay و ضبط)
-   - نصب کتابخانه‌های SoapySDR/pyrtlsdr طبق docs اگر از سخت‌افزار استفاده می‌کنید
-
-2. راه‌اندازی محیط پایتون:
-
-   python -m venv .venv
-   source .venv/bin/activate
-   pip install -r backend/requirements.txt
-
-3. اجرای سرور:
-
-   cd backend
-   ./run_server.sh
-
-4. باز کردن UI:
-   در مرورگر باز کنید: http://localhost:8000/ui
-
-فایل‌های مهم
-- backend/: کد FastAPI، reader برای SDR، و utils اسپکتروگرام
-- ui/: وب‑UI ساده برای نمایش واترفال
-- android/: اسکلت اندروید (مستندات و نمونه)
-- scripts/: اسکریپت‌های کمک
-
-برای جزئیات بیشتر فایل README هر بخش را ببینید.
+Quick start:
+  cp .env.example .env
+  docker-compose up --build -d
+  docker-compose exec backend bash -c "alembic upgrade head"
+  docker-compose up --build
+  Open http://localhost:8080/login.html
